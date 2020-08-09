@@ -48,17 +48,42 @@ const subjects = [
     "Química",
 ]
 
+const weekdays = [
+    "Domingo",
+    "Segunda-feira",
+    "Terça-feira",
+    "Quarta-feira",
+    "Quinta-feira",
+    "Sexta-feira",
+    "Sabado",
+]
+
+function getSubject(subjectNumber) {
+    const arrayPosition = +subjectNumber -1
+    return subjects[arrayPosition]
+}
+
 function pageLanding(require, response) {
     return response.render("index.html")
 }
 
 function pageStudy(require, response) {
     const filters = require.query;
-    return response.render("study.html", { proffys, filters, subjects })
+    return response.render("study.html", { proffys, filters, subjects, weekdays })
 }
 
 function pageGiveClasses(require, response) {
-    return response.render("give-classes.html")
+    const data = require.query;
+    const isNotEmpty = Object.keys(data).length > 0
+    if (isNotEmpty) {
+
+        data.subject = getSubject(data.subject)
+
+        proffys.push(data)
+
+        return response.redirect("/study")
+    }
+    return response.render("give-classes.html", {subjects, weekdays})
 }
 
 
